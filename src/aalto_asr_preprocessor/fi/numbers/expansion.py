@@ -10,7 +10,7 @@ Inflection mapping is defined in the module init.
 
 import re
 
-from aalto_asr_preprocesssor.fi.numbers import INFLECTIONS, UNITS
+from aalto_asr_preprocessor.fi.numbers import INFLECTIONS, UNITS
 
 
 def to_nominal(match: re.Match) -> str:

@@ -4,7 +4,7 @@
 import re
 from pathlib import Path
 
-import aalto_asr_preprocesssor.fi.numbers.expansion as num_fi
+import aalto_asr_preprocessor.fi.numbers.expansion as num_fi
 
 SUFFIX_MAPPING = {
     "NOM": ["han", "hän", "kaan", "kään", "ko", "kö", "kin", "pa", "pä"],
@@ -54,7 +54,7 @@ WORD_INFLECTIONS = [
     (r"[a-zåäö]{2,}n$", "GEN"),
 ]
 
-ELATIVE_WORDS = Path("recipes/words_elative.txt").read_text().split()
+ELATIVE_WORDS = Path("src/aalto_asr_preprocessor/fi/words_elative.txt").read_text().split()
 
 SECTION_CHAR_MAPPING = {
     "": ("pykälä", "JNOM"),
