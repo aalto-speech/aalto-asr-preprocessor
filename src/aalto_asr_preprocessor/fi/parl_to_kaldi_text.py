@@ -3,10 +3,15 @@
 """A recipe for preprocessing Finnish parliament transcripts to a kaldi text file."""
 import re
 from pathlib import Path
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Match
+from typing import Tuple
 
 import aalto_asr_preprocessor.fi.numbers.expansion as num_fi
 
-SUFFIX_MAPPING = {
+SUFFIX_MAPPING: Dict[str, List[str]] = {
     "NOM": ["han", "hän", "kaan", "kään", "ko", "kö", "kin", "pa", "pä"],
     "PAR": ["a", "ä", "aa", "ää", "ta", "taa", "tta", "tä"],
     "GEN": ["n"],
@@ -19,7 +24,9 @@ SUFFIX_MAPPING = {
     "ESS": ["na", "nä"],
     "TRA": ["ksi"],
     "JNOM": ["nen", "s"],
-    "JPAR": ["ttä"],  # overlaps with some #PAR cases, due to rarity overlaps are not handled
+    "JPAR": [
+        "ttä"
+    ],  # overlaps with some #PAR cases, due to rarity overlaps are not handled
     "JGEN": ["nnen"],
     "JINE": ["nnessa", "nnessä"],
     "JELA": ["nnesta", "nnestä"],
@@ -31,7 +38,7 @@ SUFFIX_MAPPING = {
     "JTRA": ["nneksi"],
 }
 
-WORD_INFLECTIONS = [
+WORD_INFLECTIONS: List[Tuple[str, str]] = [
     # 100 foobariksi -> sadaksi
     (r"[a-zåäö]{2,}ksi$", "TRA"),
     # 5 foobarilta -> viideltä
@@ -54,9 +61,11 @@ WORD_INFLECTIONS = [
     (r"[a-zåäö]{2,}n$", "GEN"),
 ]
 
-ELATIVE_WORDS = Path("src/aalto_asr_preprocessor/fi/words_elative.txt").read_text().split()
+ELATIVE_WORDS = (
+    Path("src/aalto_asr_preprocessor/fi/words_elative.txt").read_text().split()
+)
 
-SECTION_CHAR_MAPPING = {
+SECTION_CHAR_MAPPING: Dict[str, Tuple[str, str]] = {
     "": ("pykälä", "JNOM"),
     "hän": ("pykälä", "JNOM"),
     "kin": ("pykälä", "JNOM"),
@@ -78,7 +87,7 @@ SECTION_CHAR_MAPPING = {
     "s": ("pykälä", "NOM"),  # In swedish text, include here to prevent KeyError
 }
 
-ROMAN_TO_NUMBER = {
+ROMAN_TO_NUMBER: Dict[str, str] = {
     "I": "1",
     "II": "2",
     "III": "3",
@@ -92,7 +101,7 @@ ROMAN_TO_NUMBER = {
 }
 
 
-def map_suffix_to_inflection(match: re.Match) -> str:
+def map_suffix_to_inflection(match: Match[str]) -> str:
     """Expand inflected numbers captured with regexp.
 
     Can handle single numbers, decimal numbers and ranges. Possible clitics are handled too.
@@ -102,29 +111,34 @@ def map_suffix_to_inflection(match: re.Match) -> str:
         20:nkin -> kahdenkymmenenkin
 
     Args:
-        match (re.Match): number(s) and inflection captured using regexp
+        match (Match): number(s) and inflection captured using regexp
 
     Returns:
         str: number(s) inflected in word format
     """
-    numbers = match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
+    numbers = (
+        match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
+    )
     suffix, clitic = match.group(3), ""
     form = "NOM"
-    if tmp := [(suffix.split(cl)[0], cl) for cl in SUFFIX_MAPPING["NOM"] if cl in suffix]:
+    if tmp := [
+        (suffix.split(cl)[0], cl) for cl in SUFFIX_MAPPING["NOM"] if cl in suffix
+    ]:
         suffix, clitic = tmp[0]
     for f, suffixes in SUFFIX_MAPPING.items():
         if suffix in suffixes:
             form = f
-    numbers = numbers.translate(
-        str.maketrans({"+": " plus ", ",": " pilkku ", ".": " piste ", "/": " per "})
+    translation = str.maketrans(
+        {"+": " plus ", ",": " pilkku ", ".": " piste ", "/": " per "}
     )
+    numbers = numbers.translate(translation)
     numbers = re.sub(r"[-–—]", r" viiva ", numbers)
     numbers = re.sub(r"(\d+)\b", r"\1" + form, numbers)
     numbers = re.sub(r"(\d+)([A-Z]+)?", num_fi.expand, numbers)
     return f"{numbers}{clitic}"
 
 
-def number_word_pair_inflection(match: re.Match) -> str:
+def number_word_pair_inflection(match: Match[str]) -> Any:
     """Inflect number with the same case as following word.
 
     Elative overlaps with partitive which is solved using a separate lookup table collected from
@@ -133,7 +147,7 @@ def number_word_pair_inflection(match: re.Match) -> str:
     probable than leaving all numbers in nominal form.
 
     Args:
-        match (re.Match): number(s) and word captured using regexp
+        match (Match): number(s) and word captured using regexp
 
     Returns:
         str: captured regex with numbers inflected in word format
@@ -148,7 +162,7 @@ def number_word_pair_inflection(match: re.Match) -> str:
     return re.sub(r"(\d+)\.([A-Z]+\b)", r"\1#J\2", result)
 
 
-def change_to_ordinal(match: re.Match) -> str:
+def change_to_ordinal(match: Match[str]) -> str:
     """Change number before specific captured words to ordinal form.
 
     Usually ordinals are marked like so: 4. päivänä -> neljäntenä päivänä. But periods are left
@@ -157,12 +171,14 @@ def change_to_ordinal(match: re.Match) -> str:
     in nominal case because MPs are more likely to read them in nominal form.
 
     Args:
-        match (re.Match): number(s) and word captured using regexp
+        match (Match): number(s) and word captured using regexp
 
     Returns:
         str: number(s) inflected in word format together with the following word
     """
-    numbers = match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
+    numbers = (
+        match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
+    )
     form = match.group(3) if match.group(3) is not None else "NOM"
     word = match.group(4)
     numbers = re.sub(r"[-–—]", r" viiva ", numbers)
@@ -174,21 +190,25 @@ def change_to_ordinal(match: re.Match) -> str:
     return f"{numbers} {word}"
 
 
-def expand_section_sign(match: re.Match) -> str:
+def expand_section_sign(match: Match[str]) -> str:
     """Handle the inflection of § sign and the numbers immediately preceding it.
 
     Determines the inflection from the suffix associated with §. If there are multiple numbers, then
     all numbers are expanded in nominal form because MPs are more likely read it that way.
 
     Args:
-        match (re.Match): number(s) and the inflection of the section sign
+        match (Match): number(s) and the inflection of the section sign
 
     Returns:
         str: number(s) and the section sign expanded in the correct inflected form
     """
-    numbers = match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
+    numbers = (
+        match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
+    )
     suffix, clitic = match.group(3), ""
-    if tmp := [(suffix.split(cl)[0], cl) for cl in SUFFIX_MAPPING["NOM"] if cl in suffix]:
+    if tmp := [
+        (suffix.split(cl)[0], cl) for cl in SUFFIX_MAPPING["NOM"] if cl in suffix
+    ]:
         suffix, clitic = tmp[0]
     section_word, form = SECTION_CHAR_MAPPING[suffix]
     numbers = re.sub(r"[-–—]", r" viiva ", numbers)
@@ -200,26 +220,27 @@ def expand_section_sign(match: re.Match) -> str:
     return f"{numbers} {section_word}{suffix}{clitic}"
 
 
-def school_classes(match: re.Match) -> str:
+def school_classes(match: Match[str]) -> Any:
     """Handle the specific reading of 1st and 2nd year school classes.
 
     Args:
-        match (re.Match): captured school class(es)
+        match (Match): captured school class(es)
 
     Returns:
         str: school classes expanded in correct inflected form
     """
     result = " ".join([i or "" for i in match.groups()]).strip()
-    result = result.translate(str.maketrans({"1": "ykkös", "2": "kakkos", "—": "viiva"}))
+    translation = str.maketrans({"1": "ykkös", "2": "kakkos", "—": "viiva"})
+    result = result.translate(translation)
     result = re.sub(r"(\d+)\b", r"\1JNOM", result)
     return re.sub(r"(\d+)([A-Z]+)?", num_fi.expand, result)
 
 
-def roman_numerals(match: re.Match) -> str:
+def roman_numerals(match: Match[str]) -> Any:
     """Map roman numerals to arabic numerals. Handles currently only 1 to 10.
 
     Args:
-        match (re.Match): captured roman numeral
+        match (Match): captured roman numeral
 
     Returns:
         str: roman numeral as its corresponding arabic numeral
@@ -230,11 +251,11 @@ def roman_numerals(match: re.Match) -> str:
     return re.sub(r"(\d+)-", r"\1. ", result)
 
 
-def years(match: re.Match) -> str:
+def years(match: Match[str]) -> Any:
     """Handle years when they have only two digits.
 
     Args:
-        match (re.Match): captured years and words connecting them
+        match (Match): captured years and words connecting them
 
     Returns:
         str: year inflected in the nominal form
@@ -245,11 +266,11 @@ def years(match: re.Match) -> str:
     return re.sub(r"(\d+)([A-Z]+)", num_fi.expand, result)
 
 
-def lowercase(match: re.Match) -> str:
+def lowercase(match: Match[str]) -> Any:
     """Convert match to lowercase.
 
     Args:
-        match (re.Match): captured string
+        match (Match): captured string
 
     Returns:
         str: capture in lowercase
@@ -277,7 +298,10 @@ REGEXPS = [
     # Peräkkäiset pisteet yhdeksi = Substitute repeated periods with a single period
     (r"\.+", r"."),
     # Vuosiluvut = Years
-    (r"(?<!ensi )(?<!viime )([Vv]uo[nds]\w{1,5} )(\d{2,4}(?:—| ja | tai ))?(\d{2})(?!.?\d)", years),
+    (
+        r"(?<!ensi )(?<!viime )([Vv]uo[nds]\w{1,5} )(\d{2,4}(?:—| ja | tai ))?(\d{2})(?!.?\d)",
+        years,
+    ),
     (r"(\d{4})[–—]", r"\1 viiva "),
     (r"([^\/])(\d{4})\b", r"\1\2#NOM"),
     # Välit pois numeroiden välistä = Remove spaces between digits
@@ -301,7 +325,10 @@ REGEXPS = [
     (r"±", r"plus miinus "),
     (r"(\d+)\s*°C", r"\1 Celcius astetta"),
     (r"(\d+)\s*°", r"\1 astetta"),
-    (r"(?:klo|[kK]ello)\s+(\d+)\.(\d+)—(\d+)\.(\d+)", r"kello \1#NOM \2#NOM viiva \3#NOM \4#NOM"),
+    (
+        r"(?:klo|[kK]ello)\s+(\d+)\.(\d+)—(\d+)\.(\d+)",
+        r"kello \1#NOM \2#NOM viiva \3#NOM \4#NOM",
+    ),
     (r"(?:klo|[kK]ello)\s+(on\s+)?(\d+)\.(\d+)?", r"kello \1 \2#NOM \3"),
     (r"£", r"puntaa"),
     (r"\$", r"dollaria"),
@@ -388,9 +415,15 @@ REGEXPS = [
     # appears in Swedish texts, handle like this for now so errors with above regexp aren't missed
     (r"§ (\d+)", r"\1"),
     # Taivutetut numerot = Handle numbers with inflections attached
-    (r"(\d+[/+,.–—-])?(\d+):([a-zåäö]+)\b", map_suffix_to_inflection,),
+    (
+        r"(\d+[/+,.–—-])?(\d+):([a-zåäö]+)\b",
+        map_suffix_to_inflection,
+    ),
     # Ykkös- ja kakkosluokkalaisten tapaus = Exception in pronouncing school classes
-    (r"(?:(\d+)[. -]*(—|ja )?)?(\d+)[. ]*-(luokkal)", school_classes,),
+    (
+        r"(?:(\d+)[. -]*(—|ja )?)?(\d+)[. ]*-(luokkal)",
+        school_classes,
+    ),
     # Numerovälit = Number ranges
     (r"((?:\d+[. ]*)+)[–—-]+((?:\d+[. ]*)+)", r"\1 viiva \2"),
     # Eduskunnan dokumenttinumerot = Document numbers in parliament (the second number = year
@@ -416,7 +449,10 @@ REGEXPS = [
     # Nollalla alkavat numerot erikseen = Separate numbers that begin with a zero
     (r"(?<![0-9])(0\d*)(#[A-Z#]+)?", r"\1#ERI"),
     # Expand numbers to correct case
-    (r"(\d+\.? (?:viiva|pilkku|piste) )?(\d+\.?)\s+([A-Za-zåäö-]+)", number_word_pair_inflection),
+    (
+        r"(\d+\.? (?:viiva|pilkku|piste) )?(\d+\.?)\s+([A-Za-zåäö-]+)",
+        number_word_pair_inflection,
+    ),
     # Muuta järjestyslukujen sijamuodot = Change to ordinal if number is followed by a period
     (r"(\d+)\.\#([A-Z]+\b)", r"\1#J\2"),
     # 12. [a-z] -> kahdestoista

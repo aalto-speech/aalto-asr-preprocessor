@@ -1,0 +1,2 @@
+foobar
+this test was a failure

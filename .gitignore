@@ -1,5 +1,12 @@
+.cache
+.coverage
+.env
 .python-version
+.vscode
 
 src/aalto_asr_preprocessor.egg-info
 
 **/__pycache__
+*.pyc
+
+dist/

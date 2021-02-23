@@ -2,6 +2,10 @@
 # coding=utf-8
 """General text preprocessor that uses a regexp recipe to clean a text."""
 import re
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Tuple
 
 
 class UnacceptedCharsError(Exception):
@@ -10,7 +14,12 @@ class UnacceptedCharsError(Exception):
     pass
 
 
-def apply(text: str, regexps: list, unaccepted_chars: str, translations: dict = None) -> str:
+def apply(
+    text: str,
+    regexps: List[Tuple[str, object]],
+    unaccepted_chars: str,
+    translations: Optional[Dict[str, str]] = None,
+) -> str:
     r"""Apply preprocessing recipe to given text.
 
     Result is validated by checking it for any unaccepted characters. Easiest way to define
@@ -34,10 +43,11 @@ def apply(text: str, regexps: list, unaccepted_chars: str, translations: dict = 
     result = text
 
     for regexp, substitution in regexps:
-        result = re.sub(regexp, substitution, result)
+        result = re.sub(regexp, substitution, result)  # type: ignore  # overload not found
 
     if translations:
-        result = result.translate(str.maketrans(translations))
+        translation = str.maketrans(translations)
+        result = result.translate(translation)
 
     if match := re.search(unaccepted_chars, result):
         raise UnacceptedCharsError(

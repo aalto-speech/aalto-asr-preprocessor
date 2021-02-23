@@ -31,7 +31,6 @@ JALL = järjestys allatiivi (viidennelle)
 JESS = järjestys essiivi (viidentenä)
 JTRA = järjestys translatiivi (viidenneksi)
 """
-
 # Encodings for different bases of ten (ones, tens, hunderds, etc...)
 UNITS = {0: "y", 1: "k", 2: "s", 3: "t", 6: "m", 9: "r", 12: "b"}
 

@@ -7,17 +7,18 @@ form with the desired inflectional form.
 
 Inflection mapping is defined in the module init.
 """
-
 import re
+from typing import Match
 
-from aalto_asr_preprocessor.fi.numbers import INFLECTIONS, UNITS
+from aalto_asr_preprocessor.fi.numbers import INFLECTIONS
+from aalto_asr_preprocessor.fi.numbers import UNITS
 
 
-def to_nominal(match: re.Match) -> str:
+def to_nominal(match: Match[str]) -> str:
     """Regexp replacing function for expanding a string of single digits.
 
     Args:
-        match (re.Match): captured digit
+        match (Match): captured digit
 
     Returns:
         str: word corresponding to the digit
@@ -26,11 +27,11 @@ def to_nominal(match: re.Match) -> str:
     return INFLECTIONS["NOM"][digit] + " "
 
 
-def inflect(match: re.Match) -> str:
+def inflect(match: Match[str]) -> str:
     """Regexp replacing function for inflecting a digit in correct inflectional form.
 
     Args:
-        match (re.Match): captured digit and inflectional form (e.g. ('8','TRA'))
+        match (Match): captured digit and inflectional form (e.g. ('8','TRA'))
 
     Returns:
         str: word corresponding to the digit in correct case (e.g. 'kahdeksaksi')
@@ -57,11 +58,11 @@ def encode_base_ten(digits: str) -> str:
     return encoding
 
 
-def expand(match: re.Match) -> str:
+def expand(match: Match[str]) -> str:
     """Expand a number string in Finnish text to equivalent word representation.
 
     Args:
-        match (re.Match): captured number and optionally its inflectional form: 100#PAR
+        match (Match): captured number and optionally its inflectional form: 100#PAR
     """
     digits = match.group(1)
     form = match.group(2)
@@ -69,7 +70,7 @@ def expand(match: re.Match) -> str:
         form = "NOM"
 
     if form == "ERI" or digits.startswith("0") or len(digits) > 13:
-        return re.sub(r"[0-9]", to_nominal, digits).strip()
+        return str(re.sub(r"[0-9]", to_nominal, digits).strip())
 
     result = encode_base_ten(digits)
 
