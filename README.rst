@@ -28,7 +28,7 @@ clone the repository and run this command in your terminal:
 Usage
 -----
 
-For detailed instructions, see :ref:`usage`
+For detailed instructions, see `Usage`_
 or type ``aalto-prep --help`` in terminal.
 
 Contributing
@@ -60,3 +60,4 @@ This project uses `@cjolowicz`_'s `Hypermodern Python Cookiecutter`_ template.
 .. _Hypermodern Python Cookiecutter: https://github.com/cjolowicz/cookiecutter-hypermodern-python
 .. _file an issue: https://github.com/aalto-speech/aalto-asr-preprocessor/issues
 .. _Contributor Guide: CONTRIBUTING.rst
+.. _Usage: docs/index.rst
