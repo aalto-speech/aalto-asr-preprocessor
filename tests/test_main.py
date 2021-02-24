@@ -13,20 +13,20 @@ def runner() -> CliRunner:
 
 def test_fail_without_arguments(runner: CliRunner) -> None:
     """It exits if no arguments or options are given."""
-    result = runner.invoke(__main__.main)  # type: ignore  # main is not recognized
+    result = runner.invoke(__main__.main)
     assert result.exit_code == 2
 
 
 def test_help_option(runner: CliRunner) -> None:
     """It exits with status code 0 if help option is passed."""
-    result = runner.invoke(__main__.main, ["--help"])  # type: ignore  # main is not recognized
+    result = runner.invoke(__main__.main, ["--help"])
     assert result.exit_code == 0
 
 
 def test_preprocessing_to_stdout(runner: CliRunner) -> None:
     """It exits with status code 0 and processes the given input to stdout."""
     result = runner.invoke(
-        __main__.main,  # type: ignore  # main is not recognized
+        __main__.main,
         ["tests/console_test_input.txt", "-", "tests/minimal_test_recipe.py"],
     )
     assert result.exit_code == 0
@@ -36,7 +36,7 @@ def test_preprocessing_to_stdout(runner: CliRunner) -> None:
 def test_add_linefeed_handle(runner: CliRunner) -> None:
     """It outputs additional linefeeds with --add-linefeed handle."""
     result = runner.invoke(
-        __main__.main,  # type: ignore  # main is not recognized
+        __main__.main,
         [
             "tests/console_test_input.txt",
             "-",
