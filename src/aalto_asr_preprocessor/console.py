@@ -9,7 +9,6 @@ import importlib
 import click
 
 import aalto_asr_preprocessor.preprocessor as prep
-from . import __version__
 
 
 @click.command()
@@ -21,7 +20,7 @@ from . import __version__
     is_flag=True,
     help="Add line feeds to keep your input lines separated.",
 )
-@click.version_option(version=__version__)
+@click.version_option()
 def main(input, output, recipefile, add_linefeed):
     """Preprocess INPUT to OUTPUT using RECIPEFILE."""
     line_separator = ""
