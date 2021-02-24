@@ -24,7 +24,8 @@ def apply(
 
     Result is validated by checking it for any unaccepted characters. Easiest way to define
     unaccepted characters using regexps is to use a negation of accepted chars. For example:
-        r"[^a-zåäö \n]"
+
+    ``r"[^a-zåäö \n]"``
 
     In addition to regexp substitutions, translation mapping is applied to input if defined.
 

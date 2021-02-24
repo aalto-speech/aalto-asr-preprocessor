@@ -1,5 +1,9 @@
 # type: ignore
-"""Simple command line client for the package."""
+"""Simple command line client for the package.
+
+The client expects three arguments: input, output, and a recipe file.
+Run ``aalto-prep --help`` to see more.
+"""
 import importlib
 
 import click

@@ -63,6 +63,9 @@ def expand(match: Match[str]) -> str:
 
     Args:
         match (Match): captured number and optionally its inflectional form: 100#PAR
+
+    Returns:
+        str: the matched number(s) expanded as words
     """
     digits = match.group(1)
     form = match.group(2)

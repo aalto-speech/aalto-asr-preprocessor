@@ -1,4 +1,5 @@
 """Setup nox."""
+import shutil
 import sys
 from pathlib import Path
 from textwrap import dedent
@@ -9,16 +10,18 @@ from nox_poetry import session
 
 package = "aalto_asr_preprocessor"
 python_versions = ["3.9", "3.8"]
-nox.options.sessions = "pre-commit", "safety", "mypy", "tests"
+nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "docs-build"
 
 
 def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
     """Activate virtualenv in hooks installed by pre-commit.
+
     This function patches git hooks installed by pre-commit to activate the
     session's virtual environment. This allows pre-commit to locate hooks in
     that environment when invoked from git.
+
     Args:
-        session: The Session object.
+        session (Session): The Session object.
     """
     if session.bin is None:
         return
@@ -67,13 +70,13 @@ def precommit(session: Session) -> None:
     args = session.posargs or ["run", "--all-files", "--show-diff-on-failure"]
     session.install(
         "black",
-        # "darglint",
+        "darglint",
         "flake8",
         "flake8-bandit",
         "flake8-bugbear",
-        # "flake8-docstrings",
-        # "flake8-rst-docstrings",
-        # "pep8-naming",
+        "flake8-docstrings",
+        "flake8-rst-docstrings",
+        "pep8-naming",
         "pre-commit",
         "pre-commit-hooks",
         "reorder-python-imports",
@@ -94,7 +97,7 @@ def safety(session: Session) -> None:
 @session(python=python_versions)
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
-    args = session.posargs or ["src", "tests"]
+    args = session.posargs or ["src", "tests", "docs/conf.py"]
     session.install(".")
     session.install("mypy", "pytest")
     session.run("mypy", *args)
@@ -127,3 +130,31 @@ def coverage(session: Session) -> None:
         session.run("coverage", "combine")
 
     session.run("coverage", *args)
+
+
+@session(name="docs-build", python="3.8")
+def docs_build(session: Session) -> None:
+    """Build the documentation."""
+    args = session.posargs or ["docs", "docs/_build"]
+    session.install(".")
+    session.install("sphinx", "sphinx-click", "sphinx-rtd-theme")
+
+    build_dir = Path("docs", "_build")
+    if build_dir.exists():
+        shutil.rmtree(build_dir)
+
+    session.run("sphinx-build", *args)
+
+
+@session(python="3.8")
+def docs(session: Session) -> None:
+    """Build and serve the documentation with live reloading on file changes."""
+    args = session.posargs or ["--open-browser", "docs", "docs/_build"]
+    session.install(".")
+    session.install("sphinx", "sphinx-autobuild", "sphinx-click", "sphinx-rtd-theme")
+
+    build_dir = Path("docs", "_build")
+    if build_dir.exists():
+        shutil.rmtree(build_dir)
+
+    session.run("sphinx-autobuild", *args)

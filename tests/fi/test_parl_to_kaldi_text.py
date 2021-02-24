@@ -448,10 +448,7 @@ def test_kaldi_preprocessor_with_long_text(
     ],
 )
 def test_kaldi_preprocessor_with_short_text(input_text: str, true_result: str) -> None:
-    """Test preprocessing recipe for preprocessing short text input into kaldi text file.
-
-    All cases are samples from actual parliament transcript texts.
-    """
+    """Test preprocessing recipe with short samples from the parliament transcripts."""
     result = prep.apply(
         input_text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS, recipe.TRANSLATIONS
     )

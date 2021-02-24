@@ -296,9 +296,6 @@ parl_to_kaldi_pairs: List[Tuple[str, str]] = [
 
 @pytest.fixture
 def parl_to_kaldi_test_pairs(request: Any) -> Tuple[str, str]:
-    """Return an embedded statement for testing.
-
-    Request parameter is an index to the list of embedded statements at the top of the file.
-    """
+    """Return an embedded statement from the above list using given index."""
     index: int = request.param
     return parl_to_kaldi_pairs[index]

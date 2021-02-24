@@ -1,12 +1,13 @@
-.cache
-.coverage
-.env
-.python-version
-.vscode
-
-src/aalto_asr_preprocessor.egg-info
-
-**/__pycache__
+.DS_Store
+README.Aalto
 *.pyc
 
-dist/
+/.cache/
+/.coverage
+/.env
+/.python-version
+/.vscode/
+/dist/
+/docs/_build/
+/src/*.egg-info/
+__pycache__/

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # coding=utf-8
-"""A recipe for preprocessing Finnish parliament transcripts to a kaldi text file."""
+"""A recipe example for preprocessing Finnish parliament transcripts to a kaldi text file."""
 import re
 from pathlib import Path
 from typing import Any
@@ -150,7 +150,7 @@ def number_word_pair_inflection(match: Match[str]) -> Any:
         match (Match): number(s) and word captured using regexp
 
     Returns:
-        str: captured regex with numbers inflected in word format
+        Any: captured regex with numbers inflected in word format
     """
     result, word = match.group(0), match.group(3)
     for regex, form in WORD_INFLECTIONS:
@@ -227,7 +227,7 @@ def school_classes(match: Match[str]) -> Any:
         match (Match): captured school class(es)
 
     Returns:
-        str: school classes expanded in correct inflected form
+        Any: school classes expanded in correct inflected form
     """
     result = " ".join([i or "" for i in match.groups()]).strip()
     translation = str.maketrans({"1": "ykkös", "2": "kakkos", "—": "viiva"})
@@ -243,7 +243,7 @@ def roman_numerals(match: Match[str]) -> Any:
         match (Match): captured roman numeral
 
     Returns:
-        str: roman numeral as its corresponding arabic numeral
+        Any: roman numeral as its corresponding arabic numeral
     """
     result, roman = match.group(0), match.group(2)
     number = ROMAN_TO_NUMBER[roman]
@@ -258,7 +258,7 @@ def years(match: Match[str]) -> Any:
         match (Match): captured years and words connecting them
 
     Returns:
-        str: year inflected in the nominal form
+        Any: year inflected in the nominal form
     """
     result = match.group(0)
     result = re.sub(r"[-–—]", r" viiva ", result)
@@ -273,7 +273,7 @@ def lowercase(match: Match[str]) -> Any:
         match (Match): captured string
 
     Returns:
-        str: capture in lowercase
+        Any: capture in lowercase
     """
     return match.group(0).lower()
 
