@@ -13,10 +13,10 @@ aalto_asr_preprocessor.preprocessor
    :members:
 
 
-aalto_asr_preprocessor.console
-------------------------------
+aalto_asr_preprocessor.__main__
+-------------------------------
 
-.. automodule:: aalto_asr_preprocessor.console
+.. automodule:: aalto_asr_preprocessor.__main__
    :members:
 
 

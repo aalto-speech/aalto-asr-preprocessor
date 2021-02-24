@@ -40,3 +40,7 @@ def main(input, output, recipefile, add_linefeed):
         except AttributeError:
             result = prep.apply(text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS)
         output.write(result + line_separator)
+
+
+if __name__ == "__main__":
+    main(prog_name="aalto_asr_preprocessor")  # pragma: no cover
