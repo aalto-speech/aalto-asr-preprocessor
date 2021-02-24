@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# coding=utf-8
 """Test text preprocessing for Finnish."""
 from typing import Tuple
 

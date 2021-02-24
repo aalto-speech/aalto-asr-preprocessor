@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# coding=utf-8
 """Long statement strings and other space consuming data definitions for testing are declared here.
 
 This is done to avoid clutter in main test files.

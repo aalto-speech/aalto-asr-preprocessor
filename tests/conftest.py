@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# coding=utf-8
 """Configuration file for pytest.
 
 Load long test strings from separate files in the `data/` directory.

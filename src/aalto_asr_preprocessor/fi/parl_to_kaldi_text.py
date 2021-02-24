@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# coding=utf-8
 """A recipe example for preprocessing Finnish parliament transcripts to a kaldi text file."""
 import re
 from pathlib import Path

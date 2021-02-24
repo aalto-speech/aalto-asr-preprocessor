@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# coding=utf-8
 """Number expansion for Finnish.
 
 This package is used to convert numbers to written Finnish

@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# coding=utf-8
 """General text preprocessor that uses a regexp recipe to clean a text."""
 import re
 from typing import Dict

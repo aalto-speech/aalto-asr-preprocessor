@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# coding=utf-8
 """Word+inflection mapping for numbers in Finnish.
 
 You can add inflections here. Note that the names of the forms must
