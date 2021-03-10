@@ -7,7 +7,7 @@ license = "MIT"
 name = "aalto-asr-preprocessor"
 readme = "README.rst"
 repository = "https://github.com/aalto-speech/aalto-asr-preprocessor"
-version = "2021.3.5"
+version = "2021.3.10"
 
 [tool.poetry.dependencies]
 click = "^7.1.2"
