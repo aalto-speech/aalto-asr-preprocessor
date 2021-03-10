@@ -38,14 +38,17 @@ jobs:
         run: |
           pip install --constraint=.github/workflows/constraints.txt pip
           pip --version
+
       - name: Install Poetry
         run: |
           pip install --constraint=.github/workflows/constraints.txt poetry
           poetry --version
+
       - name: Install Nox
         run: |
           pip install --constraint=.github/workflows/constraints.txt nox nox-poetry
           nox --version
+
       - name: Compute pre-commit cache key
         if: matrix.session == 'pre-commit'
         id: pre-commit-cache
@@ -53,11 +56,14 @@ jobs:
         run: |
           import hashlib
           import sys
+
           python = "py{}.{}".format(*sys.version_info[:2])
           payload = sys.version.encode() + sys.executable.encode()
           digest = hashlib.sha256(payload).hexdigest()
           result = "${{ runner.os }}-{}-{}-pre-commit".format(python, digest[:8])
+
           print("::set-output name=result::{}".format(result))
+
       - name: Restore pre-commit cache
         uses: actions/cache@v2.1.4
         if: matrix.session == 'pre-commit'
@@ -66,9 +72,11 @@ jobs:
           key: ${{ steps.pre-commit-cache.outputs.result }}-${{ hashFiles('.pre-commit-config.yaml') }}
           restore-keys: |
             ${{ steps.pre-commit-cache.outputs.result }}-
+
       - name: Run Nox
         run: |
           nox --force-color --python=${{ matrix.python-version }}
+
       - name: Upload coverage data
         if: always() && matrix.session == 'tests'
         uses: "actions/upload-artifact@v2.2.2"
@@ -99,14 +107,17 @@ jobs:
         run: |
           pip install --constraint=.github/workflows/constraints.txt pip
           pip --version
+
       - name: Install Poetry
         run: |
           pip install --constraint=.github/workflows/constraints.txt poetry
           poetry --version
+
       - name: Install Nox
         run: |
           pip install --constraint=.github/workflows/constraints.txt nox nox-poetry
           nox --version
+
       - name: Download coverage data
         uses: actions/download-artifact@v2.0.8
         with:
@@ -115,6 +126,7 @@ jobs:
       - name: Combine coverage data and display human readable report
         run: |
           nox --force-color --session=coverage
+
       - name: Create coverage report
         run: |
           nox --force-color --session=coverage -- xml
