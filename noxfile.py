@@ -120,7 +120,8 @@ def tests(session: Session) -> None:
 @session
 def coverage(session: Session) -> None:
     """Produce the coverage report."""
-    nsessions = len(session._runner.manifest)  # type: ignore  # _runner is not found
+    # Do not use session.posargs unless this is the only session.
+    nsessions = len(session._runner.manifest)  # type: ignore[attr-defined]
     has_args = session.posargs and nsessions == 1
     args = session.posargs if has_args else ["report"]
 
