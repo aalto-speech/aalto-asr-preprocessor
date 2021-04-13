@@ -47,10 +47,12 @@ source = ["aalto_asr_preprocessor"]
 fail_under = 100
 show_missing = true
 
-[tool.isort]
-line_length = 100
-profile = "black"
-
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core>=1.0.0"]
+
+[tool.pytest.ini_options]
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
