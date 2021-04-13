@@ -407,6 +407,10 @@ def test_kaldi_preprocessor_with_long_text(parl_to_kaldi_test_pairs: Tuple[str, 
             "lisätään rikoslain kahteenkymmeneenyhteen lukuun uusi seitsemäs a pykälä seuraavasti",
         ),
         (
+            "lakiin lisätään uudet 58 a ja b §:t ja annetaan",
+            "lakiin lisätään uudet viisikymmentäkahdeksan a ja b pykälät ja annetaan",
+        ),
+        (
             "tämä kyseinen lakikohta. 117 g §:ää muutetaan: siinä puolestaan",
             "tämä kyseinen lakikohta sadattaseitsemättätoista g pykälää muutetaan siinä puolestaan",
         ),
