@@ -22,9 +22,7 @@ SUFFIX_MAPPING: Dict[str, List[str]] = {
     "ESS": ["na", "nä"],
     "TRA": ["ksi"],
     "JNOM": ["nen", "s"],
-    "JPAR": [
-        "ttä"
-    ],  # overlaps with some #PAR cases, due to rarity overlaps are not handled
+    "JPAR": ["ttä"],  # overlaps with some #PAR cases, due to rarity overlaps are not handled
     "JGEN": ["nnen"],
     "JINE": ["nnessa", "nnessä"],
     "JELA": ["nnesta", "nnestä"],
@@ -59,9 +57,7 @@ WORD_INFLECTIONS: List[Tuple[str, str]] = [
     (r"[a-zåäö]{2,}n$", "GEN"),
 ]
 
-ELATIVE_WORDS = (
-    Path("src/aalto_asr_preprocessor/fi/words_elative.txt").read_text().split()
-)
+ELATIVE_WORDS = Path("src/aalto_asr_preprocessor/fi/words_elative.txt").read_text().split()
 
 SECTION_CHAR_MAPPING: Dict[str, Tuple[str, str]] = {
     "": ("pykälä", "JNOM"),
@@ -114,21 +110,15 @@ def map_suffix_to_inflection(match: Match[str]) -> str:
     Returns:
         str: number(s) inflected in word format
     """
-    numbers = (
-        match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
-    )
+    numbers = match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
     suffix, clitic = match.group(3), ""
     form = "NOM"
-    if tmp := [
-        (suffix.split(cl)[0], cl) for cl in SUFFIX_MAPPING["NOM"] if cl in suffix
-    ]:
+    if tmp := [(suffix.split(cl)[0], cl) for cl in SUFFIX_MAPPING["NOM"] if cl in suffix]:
         suffix, clitic = tmp[0]
     for f, suffixes in SUFFIX_MAPPING.items():
         if suffix in suffixes:
             form = f
-    translation = str.maketrans(
-        {"+": " plus ", ",": " pilkku ", ".": " piste ", "/": " per "}
-    )
+    translation = str.maketrans({"+": " plus ", ",": " pilkku ", ".": " piste ", "/": " per "})
     numbers = numbers.translate(translation)
     numbers = re.sub(r"[-–—]", r" viiva ", numbers)
     numbers = re.sub(r"(\d+)\b", r"\1" + form, numbers)
@@ -174,9 +164,7 @@ def change_to_ordinal(match: Match[str]) -> str:
     Returns:
         str: number(s) inflected in word format together with the following word
     """
-    numbers = (
-        match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
-    )
+    numbers = match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
     form = match.group(3) if match.group(3) is not None else "NOM"
     word = match.group(4)
     numbers = re.sub(r"[-–—]", r" viiva ", numbers)
@@ -188,7 +176,7 @@ def change_to_ordinal(match: Match[str]) -> str:
     return f"{numbers} {word}"
 
 
-def expand_section_sign(match: Match[str]) -> str:
+def expand_numbers_with_section_sign(match: Match[str]) -> str:
     """Handle the inflection of § sign and the numbers immediately preceding it.
 
     Determines the inflection from the suffix associated with §. If there are multiple numbers, then
@@ -200,13 +188,9 @@ def expand_section_sign(match: Match[str]) -> str:
     Returns:
         str: number(s) and the section sign expanded in the correct inflected form
     """
-    numbers = (
-        match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
-    )
+    numbers = match.group(2) if match.group(1) is None else match.group(1) + match.group(2)
     suffix, clitic = match.group(3), ""
-    if tmp := [
-        (suffix.split(cl)[0], cl) for cl in SUFFIX_MAPPING["NOM"] if cl in suffix
-    ]:
+    if tmp := [(suffix.split(cl)[0], cl) for cl in SUFFIX_MAPPING["NOM"] if cl in suffix]:
         suffix, clitic = tmp[0]
     section_word, form = SECTION_CHAR_MAPPING[suffix]
     numbers = re.sub(r"[-–—]", r" viiva ", numbers)
@@ -216,6 +200,20 @@ def expand_section_sign(match: Match[str]) -> str:
     if form == "NOM":
         return f"{section_word}{suffix} {numbers}"
     return f"{numbers} {section_word}{suffix}{clitic}"
+
+
+def expand_section_sign(match: Match[str]) -> str:
+    """Handle the inflection of a lone § sign.
+
+    Args:
+        match (Match): number(s) and the inflection of the section sign
+
+    Returns:
+        str: section sign expanded in the correct inflected form
+    """
+    suffix = match.group(1)
+    section_word, _ = SECTION_CHAR_MAPPING[suffix]
+    return f"{section_word}{suffix}"
 
 
 def school_classes(match: Match[str]) -> Any:
@@ -406,8 +404,9 @@ REGEXPS = [
     # associated numbers
     (
         r"((?:\d+(?: [a-z])?, )*\d+(?: [a-z])?(?:—|-| ja ))?(\d+(?: *[a-z])?) *§:?([a-zåäö]*)",
-        expand_section_sign,
+        expand_numbers_with_section_sign,
     ),
+    (r"§:?([a-zåäö])", expand_section_sign),
     # Ruotsinkielisessä tekstissä pykälämerkki tulee ennen numeroa. Käsitellään toistaiseksi näin
     # koska pelkällä poistolla virheet edellisessä regexpissä jäävät huomaamatta = This format
     # appears in Swedish texts, handle like this for now so errors with above regexp aren't missed
@@ -510,7 +509,9 @@ TRANSLATIONS = {
     "ø": "ö",
     "æ": "ä",
     "š": "s",
+    "ş": "s",
     "ß": "ss",
+    "ž": "z",
     # Weird special characters encountered in Swedish text
     "ı": "i",
     "ﬁ": "fi",

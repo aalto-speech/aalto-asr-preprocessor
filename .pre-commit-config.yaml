@@ -5,6 +5,7 @@ repos:
         name: black
         entry: black
         language: system
+        args: [--line-length=100]
         types: [python]
         require_serial: true
       - id: check-added-large-files

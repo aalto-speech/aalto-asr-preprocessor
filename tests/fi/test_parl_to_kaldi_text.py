@@ -21,14 +21,10 @@ def test_unaccepted_chars() -> None:
     [(0), (1), (2), (3), (4), (5), (6), (7), (8), (9), (10)],
     indirect=True,
 )
-def test_kaldi_preprocessor_with_long_text(
-    parl_to_kaldi_test_pairs: Tuple[str, str]
-) -> None:
+def test_kaldi_preprocessor_with_long_text(parl_to_kaldi_test_pairs: Tuple[str, str]) -> None:
     """Test preprocessing recipe for preprocessing long text input into kaldi text file."""
     input_text, true_result = parl_to_kaldi_test_pairs
-    result = prep.apply(
-        input_text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS, recipe.TRANSLATIONS
-    )
+    result = prep.apply(input_text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS, recipe.TRANSLATIONS)
     assert result == true_result
 
 
@@ -411,6 +407,10 @@ def test_kaldi_preprocessor_with_long_text(
             "lisätään rikoslain kahteenkymmeneenyhteen lukuun uusi seitsemäs a pykälä seuraavasti",
         ),
         (
+            "lakiin lisätään uudet 58 a ja b §:t ja annetaan",
+            "lakiin lisätään uudet viisikymmentäkahdeksan a ja b pykälät ja annetaan",
+        ),
+        (
             "tämä kyseinen lakikohta. 117 g §:ää muutetaan: siinä puolestaan",
             "tämä kyseinen lakikohta sadattaseitsemättätoista g pykälää muutetaan siinä puolestaan",
         ),
@@ -447,7 +447,5 @@ def test_kaldi_preprocessor_with_long_text(
 )
 def test_kaldi_preprocessor_with_short_text(input_text: str, true_result: str) -> None:
     """Test preprocessing recipe with short samples from the parliament transcripts."""
-    result = prep.apply(
-        input_text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS, recipe.TRANSLATIONS
-    )
+    result = prep.apply(input_text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS, recipe.TRANSLATIONS)
     assert result == true_result
