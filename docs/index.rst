@@ -24,14 +24,11 @@ Currently, the preprocessor has recipes for one language: Finnish.
 Installation
 ------------
 
-To install the Aalto ASR preprocessor,
-clone the repository and run this command in your terminal:
+You can install *aalto-asr-preprocessor* via pip_ from PyPI_:
 
 .. code-block:: console
 
-   $ git clone https://github.com/aalto-speech/aalto-asr-preprocessor.git
-   $ cd aalto-asr-preprocessor
-   $ pip install .
+   $ pip install aalto-asr-preprocessor
 
 
 .. _usage:
@@ -71,3 +68,6 @@ Aalto ASR preprocessor can be used through the command line:
 .. option:: --help
 
    Display a short usage message and exit.
+
+.. _pip: https://pip.pypa.io/
+.. _PyPI: https://pypi.org/

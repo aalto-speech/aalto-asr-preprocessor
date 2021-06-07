@@ -1,10 +1,16 @@
 Aalto ASR preprocessing package
 ===============================
 
-|License| |Tests|
+|PyPI| |Python Version| |License|
 
-|pre-commit| |Black|
+|Tests| |pre-commit| |Black|
 
+.. |PyPI| image:: https://img.shields.io/pypi/v/aalto-asr-preprocessor.svg
+   :target: https://pypi.org/project/aalto-asr-preprocessor/
+   :alt: PyPI
+.. |Python Version| image:: https://img.shields.io/pypi/pyversions/aalto-asr-preprocessor
+   :target: https://pypi.org/project/aalto-asr-preprocessor
+   :alt: Python Version
 .. |License| image:: https://img.shields.io/github/license/aalto-speech/aalto-asr-preprocessor
    :target: https://opensource.org/licenses/MIT
    :alt: License
@@ -33,14 +39,11 @@ Requirements
 Installation
 ------------
 
-To install the Aalto ASR preprocessor,
-clone the repository and run this command in your terminal:
+You can install *aalto-asr-preprocessor* via pip_ from PyPI_:
 
 .. code-block:: console
 
-   $ git clone https://github.com/aalto-speech/aalto-asr-preprocessor.git
-   $ cd aalto-asr-preprocessor
-   $ pip install .
+   $ pip install aalto-asr-preprocessor
 
 Usage
 -----
@@ -78,3 +81,5 @@ This project uses `@cjolowicz`_'s `Hypermodern Python Cookiecutter`_ template.
 .. _file an issue: https://github.com/aalto-speech/aalto-asr-preprocessor/issues
 .. _Contributor Guide: CONTRIBUTING.rst
 .. _Usage: docs/index.rst
+.. _pip: https://pip.pypa.io/
+.. _PyPI: https://pypi.org/
