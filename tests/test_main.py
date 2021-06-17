@@ -17,6 +17,14 @@ def test_fail_without_arguments(runner: CliRunner) -> None:
     assert result.exit_code == 2
 
 
+def test_fail_with_bad_recipe_file(runner: CliRunner) -> None:
+    """It exits if recipe file is not a python file."""
+    result = runner.invoke(
+        __main__.main, ["tests/console_test_input.txt", "-", "tests/console_test_input.txt"]
+    )
+    assert result.exit_code == 1
+
+
 def test_help_option(runner: CliRunner) -> None:
     """It exits with status code 0 if help option is passed."""
     result = runner.invoke(__main__.main, ["--help"])

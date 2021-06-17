@@ -3,9 +3,7 @@
 The client expects three arguments: input, output, and a recipe file.
 Run ``aalto-prep --help`` to see more.
 """
-from importlib.abc import Loader
-from importlib.util import module_from_spec
-from importlib.util import spec_from_file_location
+import importlib
 from typing import Any
 
 import click
@@ -29,20 +27,21 @@ def main(input: Any, output: Any, recipefile: Any, add_linefeed: Any) -> None:
     if add_linefeed:
         line_separator = "\n"
 
-    spec = spec_from_file_location(recipefile, recipefile)
-    assert isinstance(spec.loader, Loader)  # for mypy
-    recipe = module_from_spec(spec)
-    spec.loader.exec_module(recipe)
+    if spec := importlib.util.spec_from_file_location("recipe", recipefile):
+        recipe = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(recipe)  # type: ignore
 
-    texts = input.readlines()
-    for text in texts:
-        try:
-            result = prep.apply(
-                text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS, recipe.TRANSLATIONS  # type: ignore
-            )
-        except AttributeError:
-            result = prep.apply(text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS)  # type: ignore
-        output.write(result + line_separator)
+        texts = input.readlines()
+        for text in texts:
+            try:
+                result = prep.apply(
+                    text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS, recipe.TRANSLATIONS  # type: ignore
+                )
+            except AttributeError:
+                result = prep.apply(text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS)  # type: ignore
+            output.write(result + line_separator)
+    else:
+        raise click.ClickException(f"Failed to import recipe '{recipefile}', is it a python file?")
 
 
 if __name__ == "__main__":
