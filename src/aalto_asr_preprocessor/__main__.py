@@ -35,10 +35,10 @@ def main(input: Any, output: Any, recipefile: Any, add_linefeed: Any) -> None:
         for text in texts:
             try:
                 result = prep.apply(
-                    text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS, recipe.TRANSLATIONS  # type: ignore
+                    text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS, recipe.TRANSLATIONS
                 )
             except AttributeError:
-                result = prep.apply(text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS)  # type: ignore
+                result = prep.apply(text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS)
             output.write(result + line_separator)
     else:
         raise click.ClickException(f"Failed to import recipe '{recipefile}', is it a python file?")
