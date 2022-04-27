@@ -443,6 +443,10 @@ def test_kaldi_preprocessor_with_long_text(parl_to_kaldi_test_pairs: Tuple[str, 
             "arvoisa puhemies kysymyksessä on siis eduskunnalle annettava tämän vuoden toiseen "
             "lisätalousarvioon liittyvä täydentävä hallituksen esitys",
         ),
+        (
+            "nähden nämä 58 c ja d §:ien määräykset",
+            "nähden nämä viisikymmentäkahdeksan c ja d pykälien määräykset",
+        ),
     ],
 )
 def test_kaldi_preprocessor_with_short_text(input_text: str, true_result: str) -> None:
