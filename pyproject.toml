@@ -38,10 +38,11 @@ aalto-prep = "aalto_asr_preprocessor.__main__:main"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
+tests = ["tests", "*/tests"]
 
 [tool.coverage.run]
 branch = true
-source = ["aalto_asr_preprocessor"]
+source = ["aalto_asr_preprocessor", "tests"]
 
 [tool.coverage.report]
 fail_under = 100
