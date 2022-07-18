@@ -8,6 +8,7 @@ from typing import Tuple
 
 import pytest
 
+
 parl_to_kaldi_pairs: List[Tuple[str, str]] = [
     (
         "Ensimmäiseen käsittelyyn esitellään päiväjärjestyksen 5. asia. Käsittelyn pohjana on "
