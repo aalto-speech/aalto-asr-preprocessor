@@ -20,7 +20,7 @@ jobs:
           - { python: 3.8, os: ubuntu-latest, session: "tests" }
           - { python: 3.9, os: windows-latest, session: "tests" }
           - { python: 3.9, os: macos-latest, session: "tests" }
-          - { python: 3.8, os: ubuntu-latest, session: "docs-build" }
+          - { python: 3.9, os: ubuntu-latest, session: "docs-build" }
 
     env:
       NOXSESSION: ${{ matrix.session }}
