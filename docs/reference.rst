@@ -1,10 +1,6 @@
 Reference
 =========
 
-.. contents::
-   :local:
-   :backlinks: none
-
 
 aalto_asr_preprocessor.preprocessor
 -----------------------------------
