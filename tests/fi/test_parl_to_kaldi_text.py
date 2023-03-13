@@ -285,6 +285,31 @@ def test_kaldi_preprocessor_with_long_text(parl_to_kaldi_test_pairs: Tuple[str, 
             "tässä mietittiin covid yhdeksäntoista koronan vaikutusta",
         ),
         (
+            "vaarallista tartuntatautia. Koronavirus COVID-19 on laajalle levinnyt",
+            "vaarallista tartuntatautia koronavirus covid yhdeksäntoista on laajalle levinnyt",
+        ),
+        (
+            "ja eräistä muista yhteisölaeista Covid-19 -epidemian leviämisen rajoittamiseksi",
+            "ja eräistä muista yhteisölaeista covid yhdeksäntoista epidemian leviämisen "
+            "rajoittamiseksi",
+        ),
+        (
+            "huomiota erityisesti tähän covid-19-rahastoon, joka toimisi Euroopan "
+            "investointipankin yhteydessä",
+            "huomiota erityisesti tähän covid yhdeksäntoista rahastoon joka toimisi euroopan "
+            "investointipankin yhteydessä",
+        ),
+        (
+            "kyse on yleisvaarallisesta tartuntataudista, covid-19:stä, ja meillä "
+            "tartuntatautilaki velvoittaa",
+            "kyse on yleisvaarallisesta tartuntataudista covid yhdeksästätoista ja meillä "
+            "tartuntatautilaki velvoittaa",
+        ),
+        (
+            "Covid-19-rokotteen kehitystyötä tehdään aktiivisesti",
+            "covid yhdeksäntoista rokotteen kehitystyötä tehdään aktiivisesti",
+        ),
+        (
             "Leopard 2A6 ‑taistelupanssarivaunuhankinta",
             "leopard kaksi a kuusi taistelupanssarivaunuhankinta",
         ),
