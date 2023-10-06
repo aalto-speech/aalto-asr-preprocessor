@@ -50,7 +50,7 @@ def apply(
 
     if match := re.search(unaccepted_chars, result):
         raise UnacceptedCharsError(
-            f"Found unaccepted character '{match.group(0)}' in result at index {match.start()}. "
+            f"Found unaccepted character {match.group(0)!r} in result at index {match.start()}. "
             f"Result:\n{result}"
         )
     return result

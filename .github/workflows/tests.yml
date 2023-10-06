@@ -31,10 +31,10 @@ jobs:
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v4.7.0
         with:
           python-version: ${{ matrix.python }}
 
@@ -50,17 +50,17 @@ jobs:
           import pip
 
           with open(os.environ["GITHUB_ENV"], mode="a") as io:
-            print(f"VIRTUALENV_PIP={pip.__version__}", file=io)
+              print(f"VIRTUALENV_PIP={pip.__version__}", file=io)
 
       - name: Install Poetry
         run: |
-          pipx install poetry==1.3.1
+          pipx install --pip-args=--constraint=.github/workflows/poetry-constraints.txt poetry
           poetry --version
 
       - name: Install Nox
         run: |
-          pipx install nox==2022.11.21
-          pipx inject nox nox-poetry==1.0.2
+          pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
+          pipx inject --pip-args=--constraint=.github/workflows/constraints.txt nox nox-poetry
           nox --version
 
       - name: Compute pre-commit cache key
@@ -69,6 +69,7 @@ jobs:
         shell: python
         run: |
           import hashlib
+          import os
           import sys
 
           python = "py{}.{}".format(*sys.version_info[:2])
@@ -76,10 +77,11 @@ jobs:
           digest = hashlib.sha256(payload).hexdigest()
           result = "${{ runner.os }}-{}-{}-pre-commit".format(python, digest[:8])
 
-          print("::set-output name=result::{}".format(result))
+          with open(os.environ["GITHUB_OUTPUT"], mode="a") as io:
+            print(f"result={result}", file=io)
 
       - name: Restore pre-commit cache
-        uses: actions/cache@v3.3.1
+        uses: actions/cache@v3.3.2
         if: matrix.session == 'pre-commit'
         with:
           path: ~/.cache/pre-commit
@@ -93,14 +95,14 @@ jobs:
 
       - name: Upload coverage data
         if: always() && matrix.session == 'tests'
-        uses: "actions/upload-artifact@v3"
+        uses: "actions/upload-artifact@v3.1.2"
         with:
           name: coverage-data
           path: ".coverage.*"
 
       - name: Upload documentation
         if: matrix.session == 'docs-build'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: docs
           path: docs/_build
@@ -110,10 +112,10 @@ jobs:
     needs: tests
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v4.7.0
         with:
           python-version: "3.10"
 
@@ -124,17 +126,17 @@ jobs:
 
       - name: Install Poetry
         run: |
-          pipx install poetry==1.3.1
+          pipx install --pip-args=--constraint=.github/workflows/poetry-constraints.txt poetry
           poetry --version
 
       - name: Install Nox
         run: |
-          pipx install nox==2022.11.21
-          pipx inject nox nox-poetry==1.0.2
+          pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
+          pipx inject --pip-args=--constraint=.github/workflows/constraints.txt nox nox-poetry
           nox --version
 
       - name: Download coverage data
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v3.0.2
         with:
           name: coverage-data
 
