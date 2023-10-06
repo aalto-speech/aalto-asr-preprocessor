@@ -41,7 +41,7 @@ def main(input: Any, output: Any, recipefile: Any, add_linefeed: Any) -> None:
                 result = prep.apply(text, recipe.REGEXPS, recipe.UNACCEPTED_CHARS)
             output.write(result + line_separator)
     else:
-        raise click.ClickException(f"Failed to import recipe '{recipefile}', is it a python file?")
+        raise click.ClickException(f"Failed to import recipe {recipefile!r}, is it a python file?")
 
 
 if __name__ == "__main__":

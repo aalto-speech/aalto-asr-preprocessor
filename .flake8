@@ -1,6 +1,6 @@
 [flake8]
 select = B,B9,BLK,C,D,DAR,E,F,I,N,RST,S,W
-ignore = E203,E501,RST301,W503
+ignore = B905,E203,E501,RST301,W503
 max-complexity = 10
 max-line-length = 100
 application-import-names = aalto_asr_preprocessor,tests
